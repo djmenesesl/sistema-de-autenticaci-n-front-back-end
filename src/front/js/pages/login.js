@@ -4,9 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const Login = (props) => {
+  const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let navigate = useNavigate();
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -22,12 +24,15 @@ export const Login = (props) => {
       });
       if (!response.ok) {
         alert("Error iniciando sesión");
+        return;
       }
       alert("User authenticated");
       const body = await response.json();
       console.log(body);
       localStorage.setItem("token", body.token);
-      navigate("/private");
+      actions.setAutUser(body);
+
+      navigate(`/private`);
     } catch (error) {
       console.log(error);
     }
@@ -62,6 +67,10 @@ export const Login = (props) => {
             type="password"
             className="form-control"
             id="exampleInputPassword1"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
           />
         </div>
 
@@ -70,13 +79,13 @@ export const Login = (props) => {
         </button>
         <br />
         <br />
-        <div>
-          <p>¿No tienes una cuenta aún?</p>
-          <Link to="/register" className="btn btn-primary">
-            Register
-          </Link>
-        </div>
       </form>
+      <div>
+        <p>¿No tienes una cuenta aún?</p>
+        <Link to="/register" className="btn btn-primary">
+          Register
+        </Link>
+      </div>
       <br />
       <Link to="/">
         <button className="btn btn-primary">Back home</button>

@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 export const Private = () => {
   const { store, actions } = useContext(Context);
   let navigate = useNavigate();
+
   async function getUserInfo() {
     try {
-      const response = await fetch(process.env.BACKEND_URL + "/api/user", {
+      const response = await fetch(process.env.BACKEND_URL + "/api/user/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -28,9 +29,10 @@ export const Private = () => {
 
   useEffect(() => {
     console.log(navigate);
-    if (localStorage.setItem("token") == null) {
+    if (localStorage.getItem("token") == null) {
       navigate("/login");
     }
+    getUserInfo();
   }, []);
 
   return (

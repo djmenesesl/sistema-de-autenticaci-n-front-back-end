@@ -58,14 +58,15 @@ def login():
     access_token = create_access_token(identity=user.id)
     print(access_token)
     return jsonify({
-        "token": access_token
+        "token": access_token,
+        
     }), 201
 
 @api.route("/user", methods=['GET'])
 @jwt_required()
 def get_user_info():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id).one_or_none()
+    user = User.query.get(user_id)
     if not user:
         return jsonify({
             "message": "Not found",
